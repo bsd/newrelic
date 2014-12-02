@@ -34,9 +34,6 @@ execute 'newrelic-install' do
     )
   end
   action :nothing
-  if node['newrelic']['php_agent']['web_server']['service_name']
-    notifies :restart, "service[#{node['newrelic']['php_agent']['web_server']['service_name']}]", :delayed
-  end
 end
 
 service 'newrelic-daemon' do
@@ -100,9 +97,6 @@ template node['newrelic']['php_agent']['config_file'] do
   if node['newrelic']['php_agent']['execute_php5enmod']
     notifies :run, 'execute[newrelic-php5enmod]', :immediately
   end
-  if node['newrelic']['php_agent']['web_server']['service_name']
-    notifies :restart, "service[#{node['newrelic']['php_agent']['web_server']['service_name']}]", :delayed
-  end
 end
 
 # https://newrelic.com/docs/php/newrelic-daemon-startup-modes
@@ -154,9 +148,6 @@ when 'external'
     )
     action :create
     notifies :restart, 'service[newrelic-daemon]', :immediately
-    if node['newrelic']['php_agent']['web_server']['service_name']
-      notifies :restart, "service[#{node['newrelic']['php_agent']['web_server']['service_name']}]", :delayed
-    end
   end
 
   service 'newrelic-daemon' do
